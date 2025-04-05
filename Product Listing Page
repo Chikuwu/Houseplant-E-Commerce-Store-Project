@@ -1,0 +1,36 @@
+// components/ProductListing.js
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { addToCart } from '../redux/actions';
+import ProductCard from './ProductCard';
+import './ProductListing.css';
+
+const ProductListing = () => {
+  const products = useSelector(state => state.products);
+  const dispatch = useDispatch();
+
+  const categories = [...new Set(products.map(product => product.category))];
+
+  return (
+    <div className="product-listing">
+      {categories.map(category => (
+        <div key={category} className="category-section">
+          <h2>{category}</h2>
+          <div className="products-grid">
+            {products
+              .filter(product => product.category === category)
+              .map(product => (
+                <ProductCard 
+                  key={product.id}
+                  product={product}
+                  onAddToCart={() => dispatch(addToCart(product.id))}
+                />
+              ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default ProductListing;
